@@ -1,0 +1,70 @@
+esphome:
+  name: airthings2
+  friendly_name: airthings2
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+light:
+  - platform: binary
+    name: "Dev Kit LED"
+    output: esp_dev_kit_led
+
+
+output:
+  - platform: gpio
+    pin: GPIO2
+    id: esp_dev_kit_led
+
+# Enable logging
+# Without mqtt enabled, you'll need to capture the logs
+# via the USB virtual serial port with something like:
+#    esphome log airthings2.yaml
+logger:
+  level: DEBUG # Required for the tracker to show the device
+
+sensor:
+  - name: airthings_sensor
+    platform: airthings_wave_mini
+    ble_client_id: airthingsmini
+    update_interval: 5min # default
+    battery_update_interval: 24h # default
+    temperature:
+      name: "WaveMini Temperature"
+    pressure:
+      name: "WaveMini Pressure"
+    humidity:
+      name: "WaveMini Humidity"
+    tvoc:
+      name: "WaveMini VOC"
+    battery_voltage:
+      name: "WaveMini Battery Voltage"
+
+ble_client:
+  - mac_address: 01:02:03:04:05:06
+    id: airthingsmini
+
+esp32_ble_tracker:
+airthings_ble:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "Don't copy me"
+
+ota:
+  password: "Don't copy me"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Airthings2 Fallback Hotspot"
+    password: "Don't copy me"
+
+captive_portal:
+    
