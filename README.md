@@ -10,7 +10,7 @@ these boards with [ESPHome](https://esphome.io).
   USB virtual serial port chip (CPxxxx) builtin. No need for the Silabs CP210x
   VCP Driver!
 
-## Programming:
+## Programming The ESP32 WROOM:
    * I couldn't get the boards to show up on WiFi, via my home assistant
      instance, with the ESPhome plugin installed.
    * I don't have Chrome or MS Edge installed on my Mac, so to program over USB,
@@ -23,6 +23,18 @@ these boards with [ESPHome](https://esphome.io).
      similar to using the Device Manager in Windows.
    * Once programmed, and connected to Home Assistant, a power only UBS cable
      can be used.
+
+So my bring up process looks like:
+
+1. Edit the yaml code:
+   1. In the locally running dashboard `esphome dashboard .`
+   2. In the dashboard of my ESPHome plugin in my HomeAssistant instance
+   3. With my favorite text editor (vim)
+2. Compile with `esphome compile file.yaml`
+3. Load it into the ESP32 with `esphome compile file.yaml`, then selecting the
+USB serial port option.
+4. (Optional) check the logs with `esphome logs file.yaml`
+5. Use the Home Assistant GUI to include entities in dashboards and automations.
 
 # Examples
 
@@ -37,6 +49,23 @@ I've found this useful, as a basic 'does it work' thing. I expect it will be
 useful when identifying multiple dev boards.
 
 ## Airthings Logger
+
+See the `airthings2.yaml` for an example. This example is based on the [ESPHome
+AirThings BLE Sensors](https://esphome.io/components/sensor/airthings_ble.html).
+
+This example includes the LED toggle via home assistant.
+
+With this yaml, board bring up process becomes:
+1. Edit the yaml (without the BLE MAC address of the airthings)
+2. compile the yaml
+3. load the compiled yaml
+4. check the logs (`esphome logs airthings2.yaml`)
+5. Copy/Paste the BLE MAC address from the logs to the `airthings2.yaml` file
+6. Re-compile yaml
+7. Load the newly compiled yaml
+8. Check the logs again, to make sure the MAC Address took, and we're getting
+readings.
+9. Use the Home Assistant GUI to do things with the new entities.
 
 ## Analog Sensor
 
