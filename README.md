@@ -67,6 +67,18 @@ With this yaml, board bring up process becomes:
 readings.
 9. Use the Home Assistant GUI to do things with the new entities.
 
+## Door Sensor
+
+See the `garagedoor.yaml` for an example.
+
+In this example I use the LED on the ESP32 as an indicator of when the door
+is open (LED on) or closed (LED off).
+
+For the sensor itself, I used "Surface Mount Alarm, Door Window", magnetic reed
+switches from [amazon](https://www.amazon.com/gp/product/B07F314V3Z). I wired
+one end to GPIO5, which hass a pull-up built in to the EPS32, and the other end
+to GND. Doesn't matter which end of the sensor goes to which pin.
+
 ## Analog Sensor
 
 Note: Despite claiming to have a built-in temperature sensor in the Amazon

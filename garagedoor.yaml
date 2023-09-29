@@ -1,0 +1,64 @@
+esphome:
+  name: garage_sensor
+  friendly_name: garage_sensor
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# https://community.home-assistant.io/t/esphome-led-switch/536396/3
+binary_sensor:
+  - platform: gpio
+    id: garage_door_sensor
+    name: "Garage Door Sensor"
+    device_class: door
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLUP
+    on_state: 
+      then:
+        - if:
+            condition:
+              binary_sensor.is_on: garage_door_sensor
+            then: 
+                  - output.turn_on: garage_led
+            else:
+                  - output.turn_off: garage_led
+
+light:
+  - platform: binary
+    name: "Garage Door Sensor LED"
+    output: garage_led
+
+output:
+  - platform: gpio
+    pin: GPIO2
+    id: garage_led
+
+# Enable logging
+# Without mqtt enabled, you'll need to capture the logs
+# via the USB virtual serial port with something like:
+#    esphome log airthings2.yaml
+logger:
+  level: DEBUG # Required for the tracker to show the device
+
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "Don't copy me"
+
+ota:
+  password: "Don't copy me"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Airthings2 Fallback Hotspot"
+    password: "Don't copy me"
+
+captive_portal:
