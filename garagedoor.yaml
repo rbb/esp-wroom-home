@@ -7,6 +7,36 @@ esp32:
   framework:
     type: arduino
 
+# Garage Door Relay
+switch:
+  - platform: gpio
+    pin: GPIO13
+    name: "Garage Door Opener"
+    id: garage_door_relay
+    icon: "mdi:garage"
+    on_turn_on:
+    - delay: 500ms
+    - switch.turn_off: garage_door_relay
+
+# BMP180 Temperature/Pressure
+sensor:
+  - platform: bmp085
+    temperature:
+      name: "Garage Temperature"
+      id: garage_temperature
+    pressure:
+      name: "Garage Pressure"
+      id: garage_pressure
+    #address: 0x77 # (default)
+    update_interval: 60s
+
+i2c:
+  sda: GPIO21 #21
+  scl: GPIO22 #22
+  scan: true
+  id: bus_a
+  #frequency: 50kHz # Default
+
 # https://community.home-assistant.io/t/esphome-led-switch/536396/3
 binary_sensor:
   - platform: gpio
@@ -25,6 +55,17 @@ binary_sensor:
                   - output.turn_on: garage_led
             else:
                   - output.turn_off: garage_led
+
+  - platform: gpio
+    id: garage_light_sensor
+    name: "Garage Light Sensor"
+    device_class: light
+    icon: "mdi:lightbulb-on-outline"
+    pin:
+      number: GPIO4
+      inverted: true
+      #mode: INPUT_PULLUP
+        input: true
 
 light:
   - platform: binary

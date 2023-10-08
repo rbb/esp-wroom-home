@@ -67,17 +67,54 @@ With this yaml, board bring up process becomes:
 readings.
 9. Use the Home Assistant GUI to do things with the new entities.
 
-## Door Sensor
+## Garage Sensor
 
-See the `garagedoor.yaml` for an example.
+The `garagedoor.yaml` has:
 
-In this example I use the LED on the ESP32 as an indicator of when the door
-is open (LED on) or closed (LED off).
+* Garage Door sensor
+* Garage door switch
+* Light sensor
+* Temperature and Pressure sensor
 
-For the sensor itself, I used "Surface Mount Alarm, Door Window", magnetic reed
+In this example, this LED on the ESP32 is an indicator of when the door
+is open (LED on) or closed (LED off). This was useful for testing the placement
+of the magnet and reed switch.
+
+For the door sensor, I used "Surface Mount Alarm, Door Window", magnetic reed
 switches from [amazon](https://www.amazon.com/gp/product/B07F314V3Z). I wired
 one end to GPIO5, which hass a pull-up built in to the EPS32, and the other end
 to GND. Doesn't matter which end of the sensor goes to which pin.
+
+For the light sensor, I used "5MM LDR Photosensitive Sensor Module" from
+[amazon](https://www.amazon.com/dp/B07XFZ99XL/). Note, as can be seen from this
+module's [schematic](light_detect_schem.jpg), the output is inverted (ie low
+voltage means light **is** detected). 
+
+For the temperature and pressure, I used BMP180 based module from
+[amazon](https://www.amazon.com/dp/B091GWXM8D).
+
+For the relay to the garage switch, I used single channel NO/NC closed relay
+from [amazon](https://www.amazon.com/dp/B0B1ZHXXXD). The Common and NO
+(Normally Open) are used to short contacts to the garage door open - pretending
+to be a button. It is wired in parallel with the existing button. Code in
+`garagedoor.yaml` makes each tap through the Home Assistant GUI a momentary
+electrical short (button press).
+
+### Wiring
+| Pin      | Board Label | Connects To           |
+|----------|-------------|-----------------------|
+| GPIO5    | D5          | Magnetic Reed Sensor  |
+| 3.3V     | Vcc         | Magnetic Reed Sensor  |
+| GPIO13   | D13         | Relay Control         |
+| 5V V     | Vin         | Relay Power           |
+| GND      | GND         | Relay GND             |
+| 3.3V     | Vcc         | Vcc Temp/Press Sensor |
+| GPIO22   | D22         | SCL Temp/Press Sensor |
+| GPIO21   | D21         | SDA Temp/Press Sensor |
+| GND      | GND         | GND Temp/Press Sensor |
+| 3.3V     | Vcc         | Vcc Light Sensor      |
+| GPIO4    | D4          | DO Light Sensor       |
+| GND      | GND         | GND Light Sensor      |
 
 ## Analog Sensor
 
