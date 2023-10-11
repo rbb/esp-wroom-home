@@ -12,11 +12,17 @@ light:
     name: "Dev Kit LED"
     output: esp_dev_kit_led
 
-
 output:
   - platform: gpio
     pin: GPIO2
     id: esp_dev_kit_led
+
+i2c:
+  sda: GPIO21 #21
+  scl: GPIO22 #22
+  scan: true
+  id: bus_a
+  #frequency: 50kHz # Default
 
 # Enable logging
 # Without mqtt enabled, you'll need to capture the logs
@@ -29,7 +35,7 @@ sensor:
   - name: airthings_sensor
     platform: airthings_wave_mini
     ble_client_id: airthingsmini
-    update_interval: 5min # default
+    update_interval: 30min # default
     battery_update_interval: 24h # default
     temperature:
       name: "WaveMini Temperature"
@@ -41,6 +47,18 @@ sensor:
       name: "WaveMini VOC"
     battery_voltage:
       name: "WaveMini Battery Voltage"
+
+  # BMP180 Temperature/Pressure
+  - platform: bmp085
+    temperature:
+      name: "Kitchen Temperature"
+      id: kitchen_temperature
+    pressure:
+      name: "Kitchen Pressure"
+      id: kitchen_pressure
+    #address: 0x77 # (default)
+    update_interval: 20s
+
 
 ble_client:
   - mac_address: 01:02:03:04:05:06
